@@ -1,7 +1,5 @@
 {
-  "name": "kindle-telegram-cloud",
+  "name": "kindle-dashboard",
   "version": "1.0.0",
-  "dependencies": {
-    "canvas": "^2.11.2"
-  }
+  "dependencies": {}
 }
