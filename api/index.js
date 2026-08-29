@@ -1,11 +1,10 @@
-
 let latestMessage = {
-    text: "暂无新提醒，快去TG发消息吧",
-    time: "等待接收..."
+    text: "等待 Telegram 消息...",
+    time: "暂无更新"
 };
 
 export default function handler(req, res) {
-    // 1. 接收来自 Telegram 的 Webhook 消息 (POST)
+    // 1. 接收 Telegram 消息
     if (req.method === 'POST') {
         const msg = req.body?.message || req.body?.edited_message;
         if (msg && msg.text) {
@@ -17,22 +16,62 @@ export default function handler(req, res) {
         return res.status(200).json({ ok: true });
     }
 
-    // 2. 供 Kindle 或浏览器直接访问的极简大字版网页 (GET)
+    // 2. 看板大屏页面 (GET)
     const html = `<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="60">
-    <title>Kindle 提醒</title>
+    <meta http-equiv="refresh" content="30"> <!-- 每30秒自动刷新 -->
+    <title>Kindle 专属看板</title>
     <style>
-        body { background-color: #ffffff; color: #000000; font-family: sans-serif; padding: 40px; margin: 0; }
-        .time { font-size: 24px; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 30px; }
-        .content { font-size: 48px; line-height: 1.5; font-weight: bold; word-break: break-all; }
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 90vh;
+            box-sizing: border-box;
+        }
+        .header {
+            font-size: 28px;
+            font-weight: bold;
+            border-bottom: 3px solid #000;
+            padding-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .content {
+            font-size: 64px;
+            font-weight: bold;
+            line-height: 1.4;
+            word-break: break-all;
+            margin: auto 0;
+        }
+        .footer {
+            font-size: 22px;
+            text-align: right;
+            color: #333;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
     </style>
 </head>
 <body>
-    <div class="time">更新时间: ${latestMessage.time}</div>
-    <div class="content">${latestMessage.text}</div>
+    <div class="header">
+        <span>📌 智能提醒看板</span>
+        <span>⚡ 实时在线</span>
+    </div>
+    <div class="content">
+        ${latestMessage.text}
+    </div>
+    <div class="footer">
+        最后更新时间：${latestMessage.time}
+    </div>
 </body>
 </html>`;
 
